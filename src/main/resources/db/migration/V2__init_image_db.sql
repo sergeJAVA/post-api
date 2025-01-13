@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS images(
+    id INT NOT NULL PRIMARY KEY,
+    userId VARCHAR(60) NOT NULL,
+    downloadPath VARCHAR(255) NOT NULL,
+    name VARCHAR(60) NOT NULL
+);

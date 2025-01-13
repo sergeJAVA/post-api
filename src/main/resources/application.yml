@@ -7,7 +7,7 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/postsdb
+    url: jdbc:postgresql://localhost:5432/postsDB
     username: root
     password: pass
     platform: postgres
@@ -17,3 +17,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+
+feign:
+  image-loader-service:
+    url: localhost:8085/image
+
