@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS posts(
+    id INT NOT NULL PRIMARY KEY,
+    title VARCHAR(60) NOT NULL,
+    imagePath VARCHAR(255) NOT NULL,
+    author VARCHAR(60) NOT NULL,
+    description VARCHAR(255)
+);
