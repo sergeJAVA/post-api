@@ -1,10 +1,14 @@
 package com.example.post_api.controllers;
 
+import com.example.post_api.model.Image;
 import com.example.post_api.model.Post;
 import com.example.post_api.services.PostService;
+import com.example.post_api.services.feign.ImageLoaderApi;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,6 +18,7 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final ImageLoaderApi imageLoaderApi;
 
     @GetMapping("/all-posts")
     public List<Post> posts() {
@@ -32,6 +37,9 @@ public class PostController {
         postService.save(kvadrat);
     }
 
-
+    @PostMapping("/load")
+    public Image loadImage(@RequestBody MultipartFile file, @RequestParam String userId) {
+        return imageLoaderApi.uploadImage(file, userId);
+    }
 
 }

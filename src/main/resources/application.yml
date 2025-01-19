@@ -22,3 +22,5 @@ feign:
   image-loader-service:
     url: localhost:8085/image
 
+logging.level.org.springframework.web: INFO
+
