@@ -6,7 +6,6 @@ import com.example.post_api.services.PostService;
 import com.example.post_api.services.feign.ImageLoaderApi;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,9 +36,18 @@ public class PostController {
         postService.save(kvadrat);
     }
 
-    @PostMapping("/load")
-    public Image loadImage(@RequestBody MultipartFile file, @RequestParam String userId) {
-        return imageLoaderApi.uploadImage(file, userId);
+    @PostMapping("/create")
+    public Image createPost(@RequestBody MultipartFile file, @RequestParam String userId) {
+        Image image = imageLoaderApi.uploadImage(file, userId);
+        Post post = Post.builder()
+                .imagePath(image.getDownloadPath())
+                .build();
+        postService.save(post);
+        return image;
     }
 
+    @DeleteMapping("/delete")
+    public void deleteImageFromPost(@RequestParam String key) {
+        imageLoaderApi.deleteImage(key);
+    }
 }

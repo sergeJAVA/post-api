@@ -3,6 +3,7 @@ package com.example.post_api.services.feign;
 import com.example.post_api.model.Image;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,4 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ImageLoaderApi {
     @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     Image uploadImage(@RequestBody MultipartFile file, @RequestParam String userId);
+
+    @DeleteMapping("/delete")
+    void deleteImage(@RequestParam String key);
+
+
 }
