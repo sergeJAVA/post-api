@@ -2,7 +2,6 @@ package com.example.post_api.services;
 
 import com.example.post_api.model.Post;
 import com.example.post_api.repository.PostRepository;
-import com.example.post_api.services.feign.ImageLoaderApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,6 @@ import java.util.List;
 public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
-    private final ImageLoaderApi imageLoaderApi;
 
 
     @Override
