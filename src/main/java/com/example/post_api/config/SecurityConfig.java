@@ -1,6 +1,7 @@
 package com.example.post_api.config;
 
 import com.example.post_api.config.security.JwtPerRequestFilter;
+import com.example.post_api.config.security.TokenFilter;
 import com.example.post_api.services.security.JWTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JWTService jwtService;
+    private final TokenFilter tokenFilter;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -35,6 +37,7 @@ public class SecurityConfig {
                         headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtPerRequestFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
