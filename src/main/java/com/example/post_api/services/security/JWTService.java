@@ -32,6 +32,10 @@ public class JWTService {
     @Value("${jwt.life-time}")
     private Long lifeTime;
 
+    public Long getUserIdFromToken(String token) {
+        return getClaimFromToken(token, claims -> claims.get("userId", Long.class));
+    }
+
     public String getUserNameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
@@ -50,6 +54,7 @@ public class JWTService {
                 .token(token)
                 .username(getUserNameFromToken(token))
                 .authorities(getRolesFromToken(token).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()))
+                .id(getUserIdFromToken(token))
                 .build();
     }
 
