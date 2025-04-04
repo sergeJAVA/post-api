@@ -28,6 +28,8 @@ jwt:
 feign:
   image-loader-service:
     url: localhost:8085/image
+  comments-api-service:
+    url: localhost:8084/comments
 
 logging.level.org.springframework.web: INFO
 
