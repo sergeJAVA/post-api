@@ -27,7 +27,7 @@ jwt:
 
 feign:
   image-loader-service:
-    url: localhost:8085/image
+    url: localhost:8086/image
   comments-api-service:
     url: localhost:8084/comments
 

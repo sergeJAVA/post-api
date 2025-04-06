@@ -5,8 +5,12 @@ import com.example.post_api.model.Post;
 import com.example.post_api.services.PostService;
 import com.example.post_api.services.feign.CommentsApi;
 import com.example.post_api.services.feign.ImageLoaderApi;
+import com.example.post_api.services.security.JWTService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +25,7 @@ public class PostController {
     private final PostService postService;
     private final ImageLoaderApi imageLoaderApi;
     private final CommentsApi commentsApi;
+    private final JWTService jwtService;
 
     @GetMapping("/all-posts")
     public List<Post> posts() {
@@ -39,21 +44,26 @@ public class PostController {
         postService.save(kvadrat);
     }
 
-    @PostMapping("/create")
-    public Image createPost(@RequestBody MultipartFile file, @RequestParam String userId) {
-        Image image = imageLoaderApi.uploadImage(file, userId);
-        Post post = Post.builder()
-                .imagePath(image.getDownloadPath())
-                .build();
-        postService.save(post);
-        return image;
+    @PostMapping(value = "/create", consumes = "multipart/form-data")
+    public Post createPost(@RequestParam("file") MultipartFile file,
+                           @CookieValue("token")String token,
+                           @RequestParam("post") String postJson)
+            throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Post post = objectMapper.readValue(postJson, Post.class);
+        return postService.createPost(file, jwtService.getUserIdFromToken(token), post, jwtService.getUserNameFromToken(token));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable Long id) {
-        postService.deletePostById(id);
-        commentsApi.deleteCommentsByPostId(id);
-        return ResponseEntity.ok("the post with id \""+ id + "\" has been deleted");
+    public ResponseEntity<String> deletePost(@PathVariable Long id, @CookieValue("token")String token) {
+        Post post = postService.findById(id);
+        if (post != null) {
+            postService.deletePostById(id);
+            commentsApi.deleteCommentsByPostId(id);
+            imageLoaderApi.deleteImage(jwtService.getUserIdFromToken(token).toString(), post.getTitle());
+            return ResponseEntity.ok("The post with id \""+ id + "\" has been deleted");
+        }
+        return new ResponseEntity<>("The post with id \"" + id + "\" was not found", HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/delete/image")
