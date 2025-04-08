@@ -30,6 +30,8 @@ feign:
     url: localhost:8086/image
   comments-api-service:
     url: localhost:8084/comments
+  like-api-service:
+    url: localhost:8083/likes
 
 logging.level.org.springframework.web: INFO
 

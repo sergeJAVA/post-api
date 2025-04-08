@@ -5,6 +5,7 @@ import com.example.post_api.model.Post;
 import com.example.post_api.services.PostService;
 import com.example.post_api.services.feign.CommentsApi;
 import com.example.post_api.services.feign.ImageLoaderApi;
+import com.example.post_api.services.feign.LikeApi;
 import com.example.post_api.services.security.JWTService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +26,7 @@ public class PostController {
     private final PostService postService;
     private final ImageLoaderApi imageLoaderApi;
     private final CommentsApi commentsApi;
+    private final LikeApi likeApi;
     private final JWTService jwtService;
 
     @GetMapping("/all-posts")
@@ -61,6 +63,7 @@ public class PostController {
             postService.deletePostById(id);
             commentsApi.deleteCommentsByPostId(id);
             imageLoaderApi.deleteImage(jwtService.getUserIdFromToken(token).toString(), post.getTitle());
+            likeApi.removeAllLikesFromPost(id);
             return ResponseEntity.ok("The post with id \""+ id + "\" has been deleted");
         }
         return new ResponseEntity<>("The post with id \"" + id + "\" was not found", HttpStatus.NOT_FOUND);
