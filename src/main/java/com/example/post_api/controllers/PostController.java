@@ -34,18 +34,6 @@ public class PostController {
         return postService.findAll();
     }
 
-    @PostConstruct
-    public void postLoad() {
-        Post kvadrat = Post.builder()
-                .title("Чёрный Квадрат Серёги")
-                .author("Серёга")
-                .description("o4en` krasiviy kvadrat")
-                .imagePath("kvadrat_seregi")
-                .build();
-
-        postService.save(kvadrat);
-    }
-
     @PostMapping(value = "/create", consumes = "multipart/form-data")
     public Post createPost(@RequestParam("file") MultipartFile file,
                            @CookieValue("token")String token,
