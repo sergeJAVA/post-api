@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/post")
@@ -32,6 +33,15 @@ public class PostController {
     @GetMapping("/all-posts")
     public List<Post> posts() {
         return postService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Post> findPostById(@PathVariable Long id) {
+        Post post = postService.findById(id);
+        if (Optional.ofNullable(post).isPresent()) {
+            return ResponseEntity.ok(post);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @PostMapping(value = "/create", consumes = "multipart/form-data")

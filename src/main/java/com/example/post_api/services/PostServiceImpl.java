@@ -36,15 +36,19 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Post createPost(MultipartFile file, Long userId, Post post, String author) {
-        Image image = imageLoaderApi.uploadImage(file, userId.toString(), post.getTitle());
         Post newPost = Post.builder()
                 .title(post.getTitle())
                 .author(author)
-                .description(post.getDescription())
-                .imagePath(image.getDownloadPath())
+                .description("")
+                .imagePath("")
                 .build();
+        Post savedPost = postRepository.save(newPost);
+        Image image = imageLoaderApi.uploadImage(file, userId.toString(), post.getTitle(), savedPost.getId().toString());
+        savedPost.setTitle(post.getTitle());
+        savedPost.setDescription(post.getDescription());
+        savedPost.setImagePath(image.getDownloadPath());
 
-        return postRepository.save(newPost);
+        return postRepository.save(savedPost);
     }
 
     @Override

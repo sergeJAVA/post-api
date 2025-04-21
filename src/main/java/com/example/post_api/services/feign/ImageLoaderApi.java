@@ -11,7 +11,7 @@ import java.util.List;
 @FeignClient(name = "image-loader-api", url = "${feign.image-loader-service.url}")
 public interface ImageLoaderApi {
     @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    Image uploadImage(@RequestBody MultipartFile file, @RequestParam String userId, @RequestParam String title);
+    Image uploadImage(@RequestBody MultipartFile file, @RequestParam String userId, @RequestParam String title, @RequestParam String postId);
 
     @DeleteMapping("/delete")
     void deleteImage(@RequestParam String key);
