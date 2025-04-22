@@ -15,4 +15,6 @@ public interface PostService {
     Post createPost(MultipartFile file, Long userId, Post post, String author);
 
     Post findById(Long id);
+
+    List<Post> updateAuthor(String oldAuthor, String newAuthor);
 }

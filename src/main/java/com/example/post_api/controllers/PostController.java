@@ -1,6 +1,5 @@
 package com.example.post_api.controllers;
 
-import com.example.post_api.model.Image;
 import com.example.post_api.model.Post;
 import com.example.post_api.services.PostService;
 import com.example.post_api.services.feign.CommentsApi;
@@ -9,7 +8,6 @@ import com.example.post_api.services.feign.LikeApi;
 import com.example.post_api.services.security.JWTService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +50,15 @@ public class PostController {
         ObjectMapper objectMapper = new ObjectMapper();
         Post post = objectMapper.readValue(postJson, Post.class);
         return postService.createPost(file, jwtService.getUserIdFromToken(token), post, jwtService.getUserNameFromToken(token));
+    }
+
+    @PostMapping("/update/author/{oldAuthor}/{newAuthor}")
+    public ResponseEntity<String> updateAuthors(@PathVariable String oldAuthor,@PathVariable String newAuthor) {
+        List<Post> posts = postService.updateAuthor(oldAuthor, newAuthor);
+        if (posts != null) {
+            return ResponseEntity.ok("The author has been successfully changed");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The author has not been changed");
     }
 
     @DeleteMapping("/{id}")

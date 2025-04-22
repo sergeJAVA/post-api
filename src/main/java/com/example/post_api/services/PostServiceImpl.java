@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +55,17 @@ public class PostServiceImpl implements PostService{
     @Override
     public Post findById(Long id) {
         return postRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Post> updateAuthor(String oldAuthor, String newAuthor) {
+        List<Post> posts = postRepository.findByAuthor(oldAuthor);
+        if (!posts.isEmpty()) {
+            posts.forEach(post -> post.setAuthor(newAuthor));
+            return postRepository.saveAll(posts);
+        }
+
+        return null;
     }
 
 
