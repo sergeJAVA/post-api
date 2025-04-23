@@ -62,13 +62,14 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable Long id, @CookieValue("token")String token) {
+    public ResponseEntity<String> deletePost(@PathVariable Long id) {
         Post post = postService.findById(id);
         if (post != null) {
             postService.deletePostById(id);
             commentsApi.deleteCommentsByPostId(id);
-            imageLoaderApi.deleteImage(jwtService.getUserIdFromToken(token).toString(), post.getTitle());
             likeApi.removeAllLikesFromPost(id);
+            imageLoaderApi.deleteImageWithPost(id.toString());
+
             return ResponseEntity.ok("The post with id \""+ id + "\" has been deleted");
         }
         return new ResponseEntity<>("The post with id \"" + id + "\" was not found", HttpStatus.NOT_FOUND);

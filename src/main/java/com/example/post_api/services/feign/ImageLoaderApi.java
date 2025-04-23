@@ -17,7 +17,7 @@ public interface ImageLoaderApi {
     void deleteImage(@RequestParam String key);
 
     @DeleteMapping("/delete/image")
-    void deleteImage(@RequestParam("userId") String userId, @RequestParam("name") String name);
+    void deleteImageWithPost(@RequestParam String postId);
 
     @GetMapping("/home")
     List<Image> home();
